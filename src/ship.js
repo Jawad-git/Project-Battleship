@@ -10,15 +10,10 @@ function Ship(length)
 
 Ship.prototype.hit = function()
 {
-    this.hits++;
-    this.isSunk();
-}
-
-Ship.prototype.isSunk = function()
-{
-    if (this.hits == this.length)
+    this.hits += 1;
+    if (this.hits >= this.length)
     {
-        this.sunken = true;
+            this.sunken = true;
     }
 }
 

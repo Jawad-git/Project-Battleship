@@ -79,15 +79,43 @@ describe('Gameboard and Ship Tests', () => {
     {
         let ship = new Ship(3);
         gameboard.placeShip(ship, 2, 3);
-        gameboard.receiveAttack('2', '3');
-        gameboard.receiveAttack('2', '4');
-        gameboard.receiveAttack('2', '5');
+        gameboard.receiveAttack(2, 3);
+        gameboard.receiveAttack(2, 4);
+        gameboard.receiveAttack(2, 5);
         expect(ship.hits).toBe(3);
     });
 
-    test('receiveAttack() works and method hit() registers on ship: ', () =>
+    test('receiveAttack() on coordinates with no ship produces a "miss": ', () =>
     {
-        gameboard.receiveAttack('2', '3');
-        expect(gameboard[2][3]).toBe("miss");
+        gameboard.receiveAttack(2, 3);
+        expect(gameboard.grid[2][3]).toBe('miss');
     });
+
+    test('receiveAttack() on coordinates with a ship produces a "hit": ', () =>
+    {
+        gameboard.placeShip(new Ship(2), 2, 3);
+        gameboard.receiveAttack(2, 3);
+        expect(gameboard.grid[2][3]).toBe('hit');
+    });
+
+    test('receiveAttack() on already targeted coordinates throws an error: ', () =>
+    {
+        gameboard.placeShip(new Ship(2), 2, 3);
+        gameboard.receiveAttack(2, 3);
+        gameboard.receiveAttack(2, 2);
+        expect(() => gameboard.receiveAttack(2, 3)).toThrow(
+        'Exception: The attack must be on a new position');
+        expect(() => gameboard.receiveAttack(2, 2)).toThrow(
+        'Exception: The attack must be on a new position');
+    });
+
+    test('sinking all the ships updates AllShipsSunken to true', () =>
+    {
+        gameboard.placeShip(new Ship(1), 0, 0);
+        gameboard.placeShip(new Ship(1), 1, 1);
+        gameboard.receiveAttack(0, 0);
+        gameboard.receiveAttack(1, 1);
+        expect(gameboard.AllShipsSunken).toBe(true);
+    });
+
 });

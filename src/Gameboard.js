@@ -5,7 +5,8 @@ function Gameboard (size = 10)
         throw new Error('Exception: gameboard size must be between 5 and 20');
     }
     const grid = Array.from({length: size}, () => Array(size).fill(null))
-    const ships = [];
+    let ships = [];
+    //let AllShipsSunken = false;
     
     const placeShip = (ship, x , y, orientation = "horizontal") =>
     {
@@ -57,8 +58,37 @@ function Gameboard (size = 10)
         ships.push(ship);
     }
 
+    const receiveAttack = (x, y) =>
+    {
+        // case: position still untouched and there is no ship
+        if (grid[x][y] === null) {
+            grid[x][y] = "miss";
+            return "miss";
+        }
 
-    return {grid, ships, placeShip};
+        // case: the position has been struck before
+        if (grid[x][y] === "miss" || grid[x][y] === "hit"){
+            throw new Error('Exception: The attack must be on a' +
+            ' new position');
+        }
+
+        // case: position still untouched but there is ship
+        const ship = grid[x][y];
+        ship.hit();
+        grid[x][y] = "hit";
+        console.log(`Ship status after hit: ${ship.sunken}`);
+        return "hit";
+    }
+
+    //
+    // review why AllShipsSunken, ships.filter(x => x !== ship)
+    // with ships.length === 0 then AllShipsSunken = true doesn't work
+    
+    const getAllShipsSunken = () => ships.every(ship => ship.sunken);
+
+    return {grid, ships, placeShip, receiveAttack, get AllShipsSunken() {
+        return getAllShipsSunken();
+    }};
 }
 
 module.exports = Gameboard;
