@@ -8,15 +8,19 @@ function Gameboard (size = 10)
     let ships = [];
     //let AllShipsSunken = false;
     
+    // default orientation is horizontal
     const placeShip = (ship, x , y, orientation = "horizontal") =>
     {
+        // if the coordinates are not within grid, throw an error
         if (x < 0 || y < 0 || x >= size || y >= size)
         {
             throw new Error
             ('Exception: the coordinates must me inside the gameboard');
         }
+
         if (orientation == "horizontal")
         {
+            // If the ship oversteps the grid, throw an error
             if (y + ship.length >= size)
             {
                 throw new Error
@@ -24,12 +28,16 @@ function Gameboard (size = 10)
             }
             for(let i = y; i < y + ship.length; i++)
             {
+                // if there is already a ship in one of the cells required
+                // for the new one, throw an error
                 if (grid[x][i] != null)
                 {
                     throw new Error
                     ('Exception: The ship cannot be placed over another ship');
                 }     
             }
+            // if the ship is succesfully placed, place a reference
+            // to it in each of the slots it takes
             for(let i = y; i < y + ship.length; i++)
             {
                 grid[x][i] = ship;
@@ -80,7 +88,6 @@ function Gameboard (size = 10)
         return "hit";
     }
 
-    //
     // review why AllShipsSunken, ships.filter(x => x !== ship)
     // with ships.length === 0 then AllShipsSunken = true doesn't work
     

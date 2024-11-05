@@ -1,5 +1,7 @@
 function Ship(length)
 {
+    // throw an error if ship is longer than 5
+    // or is 0/negative
     if (length <= 0 || length > 5) {
         throw new Error("Exception: the length must be smaller than 6 & larger than 0");
     }
