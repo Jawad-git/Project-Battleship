@@ -34,8 +34,8 @@ html, body
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-bottom: 200px;
-    gap: 50px;
+    padding-bottom: 100px;
+    gap: 40px;
 }
 
 .boards
@@ -103,11 +103,6 @@ a img:hover
 }
 
 
-.visibile
-{
-    display: block;
-}
-
 .boardName
 {
     text-align: center;
@@ -122,14 +117,14 @@ a img:hover
     width: 302px;
 }
 
-.board-buttons
+#board-buttons
 {
     align-self: center;
     display: flex;
     gap: 16px;
 }
 
-.board-buttons button
+#board-buttons button
 {
     align-self: center;
     width: 110px;
@@ -157,7 +152,7 @@ button:active
     background-color: #00408a;
 }
 
-.addShip
+#addShip
 {
     display: flex;
     gap: 40px;
@@ -193,8 +188,19 @@ input
     font-size: 16px;
 }
 
+select
+{
+    padding: 5px;
+    font-size: 16px; 
+}
+
 
 .invisible
 {
-    display: none;
+    display: none !important;
+}
+
+.visibile
+{
+    display: block;
 }

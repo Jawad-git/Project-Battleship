@@ -1,3 +1,4 @@
+import ship from './ship';
 function Gameboard (size = 10)
 {
     if (size > 20 || size < 5)
@@ -88,12 +89,55 @@ function Gameboard (size = 10)
         return "hit";
     }
 
+    const clearGrid = () =>
+    {
+        ships.length = 0
+        for (let i = 0; i < grid.length; i++) {
+            grid[i].fill(null);
+        }
+    }
+
+    const generateRandomZeroToTen = () =>
+    {
+        return Math.floor(Math.random() * 10);
+    }
+
+    const generateOrientation = () =>
+    {
+        let orientation = Math.floor(Math.random() * 2);
+        return (orientation === 0)? "horizontal": "vertical";
+    }
+
+    const placeRandomShip = (length) =>
+    {
+        try 
+        {
+            placeShip(new ship(length), generateRandomZeroToTen(), generateRandomZeroToTen(), generateOrientation());
+        }
+        catch (error)
+        {
+            placeRandomShip(length);
+        }
+    }
+    const generateRandom = () =>
+    {
+        placeRandomShip(4);
+        placeRandomShip(3);
+        placeRandomShip(3);
+        placeRandomShip(2);
+        placeRandomShip(2);
+        placeRandomShip(2);
+        placeRandomShip(1);
+        placeRandomShip(1);
+        placeRandomShip(1);
+    }
+
     // review why AllShipsSunken, ships.filter(x => x !== ship)
     // with ships.length === 0 then AllShipsSunken = true doesn't work
     
     const getAllShipsSunken = () => ships.every(ship => ship.sunken);
 
-    return {grid, ships, placeShip, receiveAttack, get AllShipsSunken() {
+    return {grid, ships, placeShip, receiveAttack, clearGrid, generateRandom, get AllShipsSunken() {
         return getAllShipsSunken();
     }};
 }

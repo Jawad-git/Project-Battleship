@@ -116,9 +116,9 @@
                     <div class="cell" data-x="9" data-y="8"></div>
                     <div class="cell" data-x="9" data-y="9"></div>
                 </div>
-                <div class="board-buttons">
-                    <button>Random</button>
-                    <button>Manual</button>
+                <div id="board-buttons">
+                    <button id="randomSelection">Random</button>
+                    <button id="manualSelection">Manual</button>
                 </div>
                 <div id="errorMessage"></div>
             </div>
@@ -229,7 +229,7 @@
                 
             </div>
         </div>
-        <div class="addShip invisible">
+        <div id="addShip"  class="invisible">
             <div class="field">
                 <label for="shipLength">Ship Length: </label>
                 <input type="number" id="shipLength" min="1" max="5">
@@ -241,6 +241,13 @@
             <div class="field">
                 <label for="y-coordinate">Coordinate y: </label>
                 <input type="number" id="y-coordinate" min="0" max="9">
+            </div>
+            <div class="field">
+                <label for="orientation">Orientation: </label>
+                <select id="orientation">
+                    <option value="horizontal">horizontal</option>
+                    <option value="vertical">Vertical</option>
+                </select>
             </div>
             <button id="submitShip">Add ship</button>
             <button id="cancel">Cancel</button>
