@@ -10,26 +10,33 @@ let domHandler = (() =>
 
     let addShipOnSubmit;
     let clearGrid;
+    let generateRandomGrid;
 
+    // clear the dom representation of the boardgame, such as classes
+    // - MAY BE INCOMPLETE
     let clearCells = () =>
     {
         let cells = document.querySelectorAll('cell')
         cells.forEach(cell => {
             cell.classList.remove('occupied');
+            // also add hit, or missed for enemy board
         })
     }
+    // make the form for manual ship creatioon appear
     let showShipForm = () =>
     {
         boardButtons.classList.add("invisible")
         shipForm.classList.remove("invisible");
     }
-
+    // hide the form, and show the buttons. maybe the user
+    // wants to randomize the board or simply start over
     let hideShipForm = () =>
     {
         boardButtons.classList.remove("invisible")
         shipForm.classList.add("invisible");
     }
 
+    // reset te grid entirely, DOM and logic - MAY BE INCOMPLETE
     let resetGrid = () =>
     {
         hideShipForm();
@@ -40,6 +47,7 @@ let domHandler = (() =>
         }
     }
 
+    // create Ship from the user input - INCOMPLETE (add orientation)
     let createShip = () =>
     {
         let shipLength = document.getElementById("shipLength").value;
@@ -51,6 +59,8 @@ let domHandler = (() =>
         return {shipLength, xCoordinate, yCoordinate}
     }
 
+    // add the ship at hand to te grid 
+    // MAY want to add orientation to callback
     let addShipToGrid = (placeShip) => {
         if (addShipOnSubmit)
         {
@@ -66,6 +76,7 @@ let domHandler = (() =>
         }
     }
 
+    // these will be inserted through index from gameboard.js
     let registerNewShipHandler = (callback) => {
         addShipOnSubmit = callback;  // Set callback for external handler
     };
@@ -74,11 +85,16 @@ let domHandler = (() =>
         clearGrid = callback;  // Set callback for external handler
     };
 
+    // INCOMPLETE
     let generateRandom = () =>
     {
-
+        resetGrid();
+        if (generateRandomGrid) generateRandomGrid();
+        // add class to ships
     }
 
+    // function too add all the event listeners
+    // call as soon as DOM loads
     let initialize = () =>
     {
         manualSelection.addEventListener('click', showShipForm);

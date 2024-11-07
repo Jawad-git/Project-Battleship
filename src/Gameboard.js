@@ -7,6 +7,7 @@ function Gameboard (size = 10)
     }
     const grid = Array.from({length: size}, () => Array(size).fill(null))
     let ships = [];
+    let occupiedCoordinates = [];
     //let AllShipsSunken = false;
     
     // default orientation is horizontal
@@ -41,6 +42,7 @@ function Gameboard (size = 10)
             // to it in each of the slots it takes
             for(let i = y; i < y + ship.length; i++)
             {
+                occupiedCoordinates += [x, i];
                 grid[x][i] = ship;
             }
         }
@@ -61,6 +63,7 @@ function Gameboard (size = 10)
             }
             for(let i = x; i < x + ship.length; i++)
             {
+                occupiedCoordinates += [i, y];
                 grid[i][y] = ship;
             }
         }
@@ -84,41 +87,54 @@ function Gameboard (size = 10)
         // case: position still untouched but there is ship
         const ship = grid[x][y];
         ship.hit();
-        grid[x][y] = "hit";
+        grid[x][y] = "hit"; // is this still necessary?
         console.log(`Ship status after hit: ${ship.sunken}`);
         return "hit";
     }
 
+    // reset the gameboard
     const clearGrid = () =>
     {
+        occupiedCoordinates = [];
         ships.length = 0
         for (let i = 0; i < grid.length; i++) {
             grid[i].fill(null);
         }
     }
 
-    const generateRandomZeroToTen = () =>
+    // generate random position from one end to another in the
+    // gameboard linearly. Assume the length is 10
+    // MAY WANT TO ACCOUNT FOR IT DYNAMICALLY LATER ON
+    const generateRandomZeroToNine = () =>
     {
         return Math.floor(Math.random() * 10);
     }
 
+    // generate orientation of the ship, in a 50/50 fashion.
     const generateOrientation = () =>
     {
         let orientation = Math.floor(Math.random() * 2);
         return (orientation === 0)? "horizontal": "vertical";
     }
 
+    // place a random sized ship (1 to 5) in a randomly
+    // generated position.
     const placeRandomShip = (length) =>
     {
         try 
         {
-            placeShip(new ship(length), generateRandomZeroToTen(), generateRandomZeroToTen(), generateOrientation());
+            placeShip(new ship(length), generateRandomZeroToNine(), generateRandomZeroToNine(), generateOrientation());
         }
+        // if there is an error, (out of bounds / ship overlap etc..)
+        // simply run it again recursively.
         catch (error)
         {
             placeRandomShip(length);
         }
     }
+    // function to randomly generate a gameboard, the game assumes
+    // the sizes will assumably go 4/3/3/2/2/2/1/1/1/1
+    // MAY WANT TO ACCOUNT FOR CUSTOM SIZES LATER ON.
     const generateRandom = () =>
     {
         placeRandomShip(4);
@@ -130,8 +146,10 @@ function Gameboard (size = 10)
         placeRandomShip(1);
         placeRandomShip(1);
         placeRandomShip(1);
+        placeRandomShip(1);
     }
 
+    // fn to check if all the ships have been fully sunk - has a getter
     // review why AllShipsSunken, ships.filter(x => x !== ship)
     // with ships.length === 0 then AllShipsSunken = true doesn't work
     

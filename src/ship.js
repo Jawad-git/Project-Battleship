@@ -10,6 +10,8 @@ function Ship(length)
     this.sunken = false;
 }
 
+// increment the ship hit counter when a hit method is called.
+// if the hits equal the length, change its sunken status to true.
 Ship.prototype.hit = function()
 {
     this.hits += 1;
