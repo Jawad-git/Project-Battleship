@@ -1,5 +1,4 @@
-const Ship = require('./ship');
-
+import Ship from "./ship";
 
 test('The ship constructor creates a ship with specified length: ', () =>
 {

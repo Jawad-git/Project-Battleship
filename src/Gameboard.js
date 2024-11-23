@@ -158,6 +158,6 @@ function Gameboard (size = 10)
     return {grid, ships, placeShip, receiveAttack, clearGrid, generateRandom, get AllShipsSunken() {
         return getAllShipsSunken();
     }};
-}
+};
 
-module.exports = Gameboard;
+export default Gameboard;

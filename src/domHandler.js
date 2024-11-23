@@ -53,21 +53,22 @@ let domHandler = (() =>
         let shipLength = document.getElementById("shipLength").value;
         let xCoordinate = document.getElementById("x-coordinate").value;
         let yCoordinate = document.getElementById("y-coordinate").value;
+        let orientation = document.getElementById("orientation").value;
         document.getElementById("shipLength").value = "";
         document.getElementById("x-coordinate").value = "";
         document.getElementById("y-coordinate").value = "";
-        return {shipLength, xCoordinate, yCoordinate}
+        return {shipLength, xCoordinate, yCoordinate, orientation}
     }
 
     // add the ship at hand to te grid 
     // MAY want to add orientation to callback
-    let addShipToGrid = (placeShip) => {
+    let addShipToGrid = () => {
         if (addShipOnSubmit)
         {
-            let {shipLength, xCoordinate, yCoordinate} = createShip();
+            let {shipLength, xCoordinate, yCoordinate, orientation} = createShip();
             try
             {
-                callback(shipLength, xCoordinate, yCoordinate)
+                addShipOnSubmit(shipLength, xCoordinate, yCoordinate, orientation)
             }
             catch (error)
             {
@@ -104,7 +105,7 @@ let domHandler = (() =>
         
     }
 
-    return {initialize};
+    return {initialize, registerClearGrid, registerNewShipHandler};
 
 })();
 

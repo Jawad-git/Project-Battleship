@@ -21,4 +21,4 @@ Ship.prototype.hit = function()
     }
 }
 
-module.exports = Ship;
+export default Ship;
