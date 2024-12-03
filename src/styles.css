@@ -200,7 +200,12 @@ select
     display: none !important;
 }
 
-.visibile
+.visible
 {
     display: block;
+}
+
+.cell.ship {
+    background-color: #007bff; /* Blue background */
+    border: 2px solid #0056b3;
 }

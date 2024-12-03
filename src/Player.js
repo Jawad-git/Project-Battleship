@@ -1,13 +1,14 @@
 import Gameboard from "./Gameboard";
-const Player = (user = 'human', size = 10) =>
+const Player = (usr = 'human', size = 10) =>
 {
-    const user = user;
+    let user = usr;
     let gameboard = Gameboard(size);
-    return {user, gameboard};
+
+    const attackEnemy = (enemyBoard, x, y) => {
+        return enemyBoard.receiveAttack(x, y);
+    }
+    return {user, gameboard, attackEnemy};
 }
 
-Player.prototype.attackEnemy = function (enemyBoard, x, y){
-    return enemyBoard.receiveAttack(x, y);
-}
 
 export default Player;

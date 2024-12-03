@@ -14,7 +14,7 @@ let playGame = (() =>
         NPCBoard = Gameboard();
         domHandler.initialize();
         domHandler.registerClearGrid(playerGameboard.clearGrid);
-        domHandler.registerNewShipHandler(GameRound.placeShip);
+        domHandler.registerNewShipHandler(GameRound.addShipToBoard); //dysfunctional
     }
     return {initialize};
 

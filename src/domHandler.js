@@ -13,14 +13,13 @@ let domHandler = (() =>
     let generateRandomGrid;
 
     // clear the dom representation of the boardgame, such as classes
-    // - MAY BE INCOMPLETE
     let clearCells = () =>
     {
-        let cells = document.querySelectorAll('cell')
+        let cells = document.querySelectorAll('.cell');
         cells.forEach(cell => {
-            cell.classList.remove('occupied');
-            // also add hit, or missed for enemy board
-        })
+            cell.classList.remove('occupied', 'miss', 'hit', 'ship');
+            cell.classList.add('unoccupied');
+        });
     }
     // make the form for manual ship creatioon appear
     let showShipForm = () =>
@@ -68,7 +67,24 @@ let domHandler = (() =>
             let {shipLength, xCoordinate, yCoordinate, orientation} = createShip();
             try
             {
-                addShipOnSubmit(shipLength, xCoordinate, yCoordinate, orientation)
+                addShipOnSubmit(shipLength, xCoordinate, yCoordinate, orientation);
+                if (orientation === 'horizontal')
+                {
+                    for (let y = 0; 0 < shipLength; i++)
+                    {
+                        cell = document.querySelector(`.friend .cell[data-x="${xCoordinate}"][data-y="${yCoordinate + y}"]`);
+                        cell.classList.add('ship');
+                    }
+                }
+                else
+                {
+                    for (let i = 0; 0 < shipLength; i++)
+                    {
+                        cell = document.querySelector(`.friend .cell[data-x="${xCoordinate + i}"][data-y="${yCoordinate}"]`);
+                        cell.classList.add('ship');
+                    }
+                }
+                console.log('hi');
             }
             catch (error)
             {
@@ -91,7 +107,10 @@ let domHandler = (() =>
     {
         resetGrid();
         if (generateRandomGrid) generateRandomGrid();
-        // add class to ships
+        let friendGrid = document.querySelector('friend');
+        friendGrid.querySelectorAll('.cell').forEach(cell => {
+            cell.classList.remove("ship", "missed", "hit");
+        });
     }
 
     // function too add all the event listeners

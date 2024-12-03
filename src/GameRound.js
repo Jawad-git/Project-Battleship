@@ -12,8 +12,8 @@ GameRound.prototype.switchTurns = function (){
 
 GameRound.prototype.addShipToBoard = function (ship, x, y, orient){
     this.player.gameboard.placeShip(ship, x, y, orient);
-    // place a random enemy ship of random length
-    this.npc.gameboard.placeRandomShip(enemyShip.length);
+    // place a random enemy ship of the same length
+    //this.npc.gameboard.placeRandomShip(enemyShip.length);
 }
 
 GameRound.prototype.clearBoards = function (){
@@ -25,3 +25,5 @@ GameRound.prototype.selectRandomGrid = function () {
     this.player.gameboard.generateRandom();
     this.npc.gameboard.generateRandom();
 }
+
+export default GameRound;
