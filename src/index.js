@@ -1,6 +1,7 @@
 import './styles.css';
 import domHandler from './domHandler';
 import Gameboard from './Gameboard';
+import GameRound from './GameRound';
 
 let playGame = (() =>
 {
@@ -13,7 +14,7 @@ let playGame = (() =>
         NPCBoard = Gameboard();
         domHandler.initialize();
         domHandler.registerClearGrid(playerGameboard.clearGrid);
-        domHandler.registerNewShipHandler(playerGameboard.placeShip);
+        domHandler.registerNewShipHandler(GameRound.placeShip);
     }
     return {initialize};
 

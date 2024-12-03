@@ -155,7 +155,7 @@ function Gameboard (size = 10)
     
     const getAllShipsSunken = () => ships.every(ship => ship.sunken);
 
-    return {grid, ships, placeShip, receiveAttack, clearGrid, generateRandom, get AllShipsSunken() {
+    return {grid, ships, placeShip, receiveAttack, clearGrid, generateRandom, placeRandomShip, get AllShipsSunken() {
         return getAllShipsSunken();
     }};
 };
