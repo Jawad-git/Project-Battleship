@@ -49,9 +49,9 @@ let domHandler = (() =>
     // create Ship from the user input - INCOMPLETE (add orientation)
     let createShip = () =>
     {
-        let shipLength = document.getElementById("shipLength").value;
-        let xCoordinate = document.getElementById("x-coordinate").value;
-        let yCoordinate = document.getElementById("y-coordinate").value;
+        let shipLength = Number(document.getElementById("shipLength").value);
+        let xCoordinate = Number(document.getElementById("x-coordinate").value);
+        let yCoordinate = Number(document.getElementById("y-coordinate").value);
         let orientation = document.getElementById("orientation").value;
         document.getElementById("shipLength").value = "";
         document.getElementById("x-coordinate").value = "";
@@ -60,7 +60,6 @@ let domHandler = (() =>
     }
 
     // add the ship at hand to te grid 
-    // MAY want to add orientation to callback
     let addShipToGrid = () => {
         if (addShipOnSubmit)
         {
@@ -68,19 +67,19 @@ let domHandler = (() =>
             try
             {
                 addShipOnSubmit(shipLength, xCoordinate, yCoordinate, orientation);
-                if (orientation === 'horizontal')
+                if (orientation == 'horizontal')
                 {
-                    for (let y = 0; 0 < shipLength; i++)
+                    for (let y = 0; y < shipLength; y++)
                     {
-                        cell = document.querySelector(`.friend .cell[data-x="${xCoordinate}"][data-y="${yCoordinate + y}"]`);
+                        let cell = document.querySelector(`.friend .cell[data-x="${xCoordinate}"][data-y="${yCoordinate + y}"]`);
                         cell.classList.add('ship');
                     }
                 }
                 else
                 {
-                    for (let i = 0; 0 < shipLength; i++)
+                    for (let i = 0; i < shipLength; i++)
                     {
-                        cell = document.querySelector(`.friend .cell[data-x="${xCoordinate + i}"][data-y="${yCoordinate}"]`);
+                        let cell = document.querySelector(`.friend .cell[data-x="${xCoordinate + i}"][data-y="${yCoordinate}"]`);
                         cell.classList.add('ship');
                     }
                 }
@@ -102,15 +101,22 @@ let domHandler = (() =>
         clearGrid = callback;  // Set callback for external handler
     };
 
-    // INCOMPLETE
+    let registerRandomizedSelection = (callback) => {
+        generateRandomGrid = callback;  // Set callback for external handler
+    };
+
+    // clear the previous grid and deploy a new randomized one
     let generateRandom = () =>
     {
-        resetGrid();
-        if (generateRandomGrid) generateRandomGrid();
-        let friendGrid = document.querySelector('friend');
-        friendGrid.querySelectorAll('.cell').forEach(cell => {
-            cell.classList.remove("ship", "missed", "hit");
-        });
+        clearCells();
+        if (clearGrid) clearGrid();
+        if (generateRandomGrid){
+            let friendCoordinates = generateRandomGrid();
+            friendCoordinates.forEach(([x, y]) => {
+                let cell = document.querySelector(`.friend .cell[data-x="${x}"][data-y="${y}"]`);
+                cell.classList.add('ship');
+            })
+        }
     }
 
     // function too add all the event listeners
@@ -124,7 +130,7 @@ let domHandler = (() =>
         
     }
 
-    return {initialize, registerClearGrid, registerNewShipHandler};
+    return {initialize, registerClearGrid, registerNewShipHandler, registerRandomizedSelection};
 
 })();
 

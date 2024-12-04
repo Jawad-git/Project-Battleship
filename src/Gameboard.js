@@ -1,6 +1,7 @@
-import ship from './ship';
-function Gameboard (size = 10)
+import Ship from './ship';
+function Gameboard (sze = 10)
 {
+    let size = sze;
     if (size > 20 || size < 5)
     {
         throw new Error('Exception: gameboard size must be between 5 and 20');
@@ -42,7 +43,7 @@ function Gameboard (size = 10)
             // to it in each of the slots it takes
             for(let i = y; i < y + ship.length; i++)
             {
-                occupiedCoordinates += [x, i];
+                occupiedCoordinates.push([x, i]);
                 grid[x][i] = ship;
             }
         }
@@ -63,7 +64,7 @@ function Gameboard (size = 10)
             }
             for(let i = x; i < x + ship.length; i++)
             {
-                occupiedCoordinates += [i, y];
+                occupiedCoordinates.push([i, y]);
                 grid[i][y] = ship;
             }
         }
@@ -95,7 +96,7 @@ function Gameboard (size = 10)
     // reset the gameboard
     const clearGrid = () =>
     {
-        occupiedCoordinates = [];
+        occupiedCoordinates.length = 0;
         ships.length = 0
         for (let i = 0; i < grid.length; i++) {
             grid[i].fill(null);
@@ -123,7 +124,8 @@ function Gameboard (size = 10)
     {
         try 
         {
-            placeShip(new ship(length), generateRandomZeroToNine(), generateRandomZeroToNine(), generateOrientation());
+            let ship = new Ship(length);
+            placeShip(ship, generateRandomZeroToNine(), generateRandomZeroToNine(), generateOrientation());
         }
         // if there is an error, (out of bounds / ship overlap etc..)
         // simply run it again recursively.
@@ -155,7 +157,7 @@ function Gameboard (size = 10)
     
     const getAllShipsSunken = () => ships.every(ship => ship.sunken);
 
-    return {grid, ships, placeShip, receiveAttack, clearGrid, generateRandom, placeRandomShip, get AllShipsSunken() {
+    return {grid, ships, placeShip, receiveAttack, clearGrid, generateRandom, placeRandomShip, occupiedCoordinates, get AllShipsSunken() {
         return getAllShipsSunken();
     }};
 };

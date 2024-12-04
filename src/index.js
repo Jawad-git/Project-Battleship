@@ -5,18 +5,18 @@ import GameRound from './GameRound';
 
 let playGame = (() =>
 {
-    let playerGameboard;
-    let NPCBoard;
+    let game;
 
     let initialize = () =>
     {
-        playerGameboard = Gameboard();
-        NPCBoard = Gameboard();
+        game = new GameRound();
         domHandler.initialize();
-        domHandler.registerClearGrid(playerGameboard.clearGrid);
-        domHandler.registerNewShipHandler(GameRound.addShipToBoard); //dysfunctional
+        domHandler.registerNewShipHandler(game.addShipToBoard);
+        domHandler.registerClearGrid(game.clearBoards);
+        domHandler.registerRandomizedSelection(game.selectRandomGrid);
+
     }
-    return {initialize};
+    return {initialize, game};
 
 })();
 
