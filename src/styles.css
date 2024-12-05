@@ -170,15 +170,15 @@ button:active
     margin-left: -20px;
 }
 
-#cancel {
+.redButtonResponsive {
     background-color: #ff4d4d; /* Initial state */
 }
 
-#cancel {
+.redButtonResponsive:hover {
     background-color: #e60000; /* Hover state */
 }
 
-#cancel {
+.redButtonResponsive:active {
     background-color: #b30000; /* Active state */
 }
 
@@ -193,7 +193,6 @@ select
     padding: 5px;
     font-size: 16px; 
 }
-
 
 .invisible
 {

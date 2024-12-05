@@ -6,11 +6,43 @@ let domHandler = (() =>
     let manualSelection = document.getElementById("manualSelection");
     let cancelFormButton = document.getElementById("cancel");
     let submitButton = document.getElementById("submitShip");
+    let startButton = document.getElementById('startGame');
+    let leaveButton = document.getElementById('leaveGame');
+    let errorMessage = document.getElementById('errorMessage');
+
 
 
     let addShipOnSubmit;
     let clearGrid;
     let generateRandomGrid;
+    
+    // these will be inserted through index from gameboard.js
+    let registerNewShipHandler = (callback) => {
+        addShipOnSubmit = callback;  // Set callback for external handler
+    };
+
+    let registerClearGrid = (callback) => {
+        clearGrid = callback;  // Set callback for external handler
+    };
+
+    let registerRandomizedSelection = (callback) => {
+        generateRandomGrid = callback;  // Set callback for external handler
+    };
+
+    let stylizeCell = (cell, status) =>
+    {
+        cell.classList.remove('unoccupied');
+        cell.classList.add('occupied');
+        if (status === 'miss')
+        {
+            cell.classList.add('miss');
+        }
+        else if (status === 'hit')
+        {
+            cell.classList.add('hit');
+        }
+    }
+
 
     // clear the dom representation of the boardgame, such as classes
     let clearCells = () =>
@@ -30,9 +62,28 @@ let domHandler = (() =>
     // hide the form, and show the buttons. maybe the user
     // wants to randomize the board or simply start over
     let hideShipForm = () =>
-    {
+        {
         boardButtons.classList.remove("invisible")
         shipForm.classList.add("invisible");
+    }
+
+    let handleCellClick = () => {
+        
+
+    }
+
+    let startGame = (e) =>
+    {
+        boardButtons.classList.add('invisible');
+        shipForm.classList.add('invisible');
+        startButton.classList.add('invisible');
+        leaveButton.classList.remove('invisible');
+        let cellsEnemy = document.querySelectorAll('.enemy .cell');
+        cellsEnemy.forEach(cell => {
+            cell.addEventListener('click', (e) => )
+        })
+
+
     }
 
     // reset te grid entirely, DOM and logic - MAY BE INCOMPLETE
@@ -92,18 +143,6 @@ let domHandler = (() =>
         }
     }
 
-    // these will be inserted through index from gameboard.js
-    let registerNewShipHandler = (callback) => {
-        addShipOnSubmit = callback;  // Set callback for external handler
-    };
-
-    let registerClearGrid = (callback) => {
-        clearGrid = callback;  // Set callback for external handler
-    };
-
-    let registerRandomizedSelection = (callback) => {
-        generateRandomGrid = callback;  // Set callback for external handler
-    };
 
     // clear the previous grid and deploy a new randomized one
     let generateRandom = () =>
@@ -119,6 +158,14 @@ let domHandler = (() =>
         }
     }
 
+    let resetGame = () => {
+        resetGrid();
+        hideShipForm();
+        leaveButton.classList.add('invisible');
+        startButton.classList.remove('invisible');
+        errorMessage.innerText = '';
+    }
+
     // function too add all the event listeners
     // call as soon as DOM loads
     let initialize = () =>
@@ -127,6 +174,8 @@ let domHandler = (() =>
         randomSelection.addEventListener('click', generateRandom);
         cancelFormButton.addEventListener('click', resetGrid);
         submitButton.addEventListener('click', addShipToGrid);
+        leaveButton.addEventListener('click', resetGame);
+        startButton.addEventListener('click', (e) => startGame(e));
         
     }
 

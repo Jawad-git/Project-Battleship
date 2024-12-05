@@ -13,6 +13,29 @@ class GameRound {
     switchTurns() {
         this.currentPlayer = this.currentPlayer === this.player ? this.npc : this.player;
     }
+
+    attackPosition(x, y) {
+        if (this.currentPlayer == this.player) {
+            let status = this.currentPlayer.attackEnemy(this.npc.gameboard, x, y);
+            if (status === 'hit') {
+                return 'hit';
+            }
+            else {
+                this.switchTurns();
+                return 'miss';
+            }
+        }
+        else {
+            let status = this.currentPlayer.attackEnemy(this.player.gameboard, x, y);
+            if (status === 'hit') {
+                return 'hit';
+            }
+            else {
+                this.switchTurns();
+                return 'miss';
+            }
+        }
+    }
     addShipToBoard(shipLength, x, y, orient) {
         this.player.gameboard.placeShip(new Ship(shipLength), x, y, orient);
         this.npc.gameboard.placeRandomShip(shipLength); // place a random enemy ship of the same length
