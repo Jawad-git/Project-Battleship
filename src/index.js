@@ -14,6 +14,8 @@ let playGame = (() =>
         domHandler.registerNewShipHandler(game.addShipToBoard);
         domHandler.registerClearGrid(game.clearBoards);
         domHandler.registerRandomizedSelection(game.selectRandomGrid);
+        domHandler.registerCellClickFunction(game.attackPosition);
+        domHandler.registerCurrentTurnToggle(game.returnTurn);
 
     }
     return {initialize, game};

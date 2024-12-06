@@ -8,7 +8,8 @@ class GameRound {
         this.addShipToBoard = this.addShipToBoard.bind(this); // Automatically bind methods
         this.clearBoards = this.clearBoards.bind(this); // Automatically bind methods
         this.selectRandomGrid = this.selectRandomGrid.bind(this); // Automatically bind methods
-
+        this.attackPosition = this.attackPosition.bind(this); // Automatically bind methods
+        this.returnTurn = this.returnTurn.bind(this); // Automatically bind methods
     }
     switchTurns() {
         this.currentPlayer = this.currentPlayer === this.player ? this.npc : this.player;
@@ -52,6 +53,10 @@ class GameRound {
         this.player.gameboard.generateRandom();
         this.npc.gameboard.generateRandom();
         return this.player.gameboard.occupiedCoordinates;
+    }
+
+    returnTurn() {
+        return this.currentPlayer.user;
     }
 }
 

@@ -222,6 +222,10 @@ select
     position: absolute;
 }
 
+.clickable
+{
+    cursor: pointer;
+}
 .cell.hit {
     background-color: #ff0000; /* Red background */
     border: 2px solid #990000;

@@ -9,12 +9,15 @@ let domHandler = (() =>
     let startButton = document.getElementById('startGame');
     let leaveButton = document.getElementById('leaveGame');
     let errorMessage = document.getElementById('errorMessage');
+    let currentTurn = document.getElementById('currentTurn');
 
-
+    let cellsEnemy;
 
     let addShipOnSubmit;
     let clearGrid;
     let generateRandomGrid;
+    let onClickHandler;
+    let returnCurrentTurn;
     
     // these will be inserted through index from gameboard.js
     let registerNewShipHandler = (callback) => {
@@ -28,6 +31,14 @@ let domHandler = (() =>
     let registerRandomizedSelection = (callback) => {
         generateRandomGrid = callback;  // Set callback for external handler
     };
+
+    let registerCellClickFunction = (callback) => {
+        onClickHandler = callback;
+    }
+
+    let registerCurrentTurnToggle = (callback) => {
+        returnCurrentTurn = callback;
+    }
 
     let stylizeCell = (cell, status) =>
     {
@@ -67,23 +78,54 @@ let domHandler = (() =>
         shipForm.classList.add("invisible");
     }
 
-    let handleCellClick = () => {
-        
-
+    function wait(ms) {
+        const start = Date.now();
+        while (Date.now() - start < ms) {
+            // Busy wait
+        }
     }
 
-    let startGame = (e) =>
+    let handleCellClick = (e) => {
+        let status = onClickHandler(e.target.dataset.x, e.target.dataset.y);
+        stylizeCell(e.target, status);
+        e.target.removeEventListener('click', handleCellClick);
+        e.target.classList.remove('clickable');
+        console.log('hi');
+        if (status === 'miss') {
+            cellsEnemy.forEach(cell => cell.removeEventListener('click', handleCellClick));
+            //switch turn indicator!
+            currentTurn.innerHTML = `It is ${returnCurrentTurn()}'s turn`;
+            while (true) {
+                let cell = document.querySelector(`.friend .cell[data-x="${Math.floor(Math.random() * 9)}"][data-y="${Math.floor(Math.random() * 9)}"]`);
+                if (cell.classList.contains('occupied')) continue;
+                //wait(500);
+                let status = onClickHandler(cell.dataset.x, cell.dataset.y);
+                stylizeCell(cell, status);
+                if (status === 'miss') {
+                    currentTurn.innerHTML = `It is ${returnCurrentTurn()}'s turn`;
+                    cellsEnemy = document.querySelectorAll('.enemy .unoccupied');
+                    cellsEnemy.forEach(cell => {
+                        cell.addEventListener('click', handleCellClick);
+                        cell.classList.add('clickable');
+                    });
+                    break;
+                }
+            }
+        }
+    }
+
+    let startGame = () =>
     {
         boardButtons.classList.add('invisible');
         shipForm.classList.add('invisible');
         startButton.classList.add('invisible');
         leaveButton.classList.remove('invisible');
-        let cellsEnemy = document.querySelectorAll('.enemy .cell');
+        currentTurn.textContent = `It is ${returnCurrentTurn()}'s turn`;
+        cellsEnemy = document.querySelectorAll('.enemy .unoccupied');
         cellsEnemy.forEach(cell => {
-            cell.addEventListener('click', (e) => )
-        })
-
-
+            cell.addEventListener('click', handleCellClick);
+            cell.classList.add('clickable');
+        });
     }
 
     // reset te grid entirely, DOM and logic - MAY BE INCOMPLETE
@@ -175,11 +217,13 @@ let domHandler = (() =>
         cancelFormButton.addEventListener('click', resetGrid);
         submitButton.addEventListener('click', addShipToGrid);
         leaveButton.addEventListener('click', resetGame);
-        startButton.addEventListener('click', (e) => startGame(e));
+        startButton.addEventListener('click', startGame);
         
     }
 
-    return {initialize, registerClearGrid, registerNewShipHandler, registerRandomizedSelection};
+    return {initialize, registerClearGrid, registerNewShipHandler, registerRandomizedSelection,
+        registerCellClickFunction, registerCurrentTurnToggle
+    };
 
 })();
 
