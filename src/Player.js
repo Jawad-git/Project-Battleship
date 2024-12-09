@@ -5,7 +5,8 @@ const Player = (usr = 'human', size = 10) =>
     let gameboard = Gameboard(size);
 
     const attackEnemy = (enemyBoard, x, y) => {
-        return enemyBoard.receiveAttack(x, y);
+        return {...enemyBoard.receiveAttackWrapper(x, y),
+        user};
     }
     return {user, gameboard, attackEnemy};
 }

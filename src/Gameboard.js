@@ -8,7 +8,7 @@ function Gameboard (sze = 10)
     }
     const grid = Array.from({length: size}, () => Array(size).fill(null))
     let ships = [];
-    let occupiedCoordinates = [];
+    const occupiedCoordinates = new Set();
     //let AllShipsSunken = false;
     
     // default orientation is horizontal
@@ -43,7 +43,7 @@ function Gameboard (sze = 10)
             // to it in each of the slots it takes
             for(let i = y; i < y + ship.length; i++)
             {
-                occupiedCoordinates.push([x, i]);
+                occupiedCoordinates.add([x, i]);
                 grid[x][i] = ship;
             }
         }
@@ -64,7 +64,7 @@ function Gameboard (sze = 10)
             }
             for(let i = x; i < x + ship.length; i++)
             {
-                occupiedCoordinates.push([i, y]);
+                occupiedCoordinates.add([i, y]);
                 grid[i][y] = ship;
             }
         }
@@ -73,30 +73,51 @@ function Gameboard (sze = 10)
 
     const receiveAttack = (x, y) =>
     {
-        // case: position still untouched and there is no ship
-        if (grid[x][y] === null) {
-            grid[x][y] = "miss";
-            return "miss";
-        }
-
         // case: the position has been struck before
-        if (grid[x][y] === "miss" || grid[x][y] === "hit"){
+        if (occupiedCoordinates.has(`${x},${y}`)){
             throw new Error('Exception: The attack must be on a' +
             ' new position');
         }
+        occupiedCoordinates.add(`${x},${y}`);
+
+        // case: position still untouched and there is no ship
+        if (grid[x][y] === null) {
+            return "miss";
+        }
 
         // case: position still untouched but there is ship
-        const ship = grid[x][y];
+        let ship = grid[x][y];
         ship.hit();
-        grid[x][y] = "hit"; // is this still necessary?
-        console.log(`Ship status after hit: ${ship.sunken}`);
         return "hit";
+    }
+
+    const receiveAttackWrapper = (x, y) => {
+        let status = receiveAttack(x, y);
+        let ship = grid[x][y];
+        let shipCoordinates = [];
+        if (ship instanceof Ship)
+        {
+            status = ship.sunken? 'sink': status;
+        }
+        if (status === 'sink')
+        {
+            for (let i = 0; i < size; i++)
+            {
+                for (let y = 0; y < size; y++)
+                {
+                    if (ship == grid[i][y])
+                        shipCoordinates.push(`${i} ${y}`);
+                }
+            }
+            if (getAllShipsSunken()) status = 'allShipsSunken';
+        }
+        return {status, shipCoordinates};
     }
 
     // reset the gameboard
     const clearGrid = () =>
     {
-        occupiedCoordinates.length = 0;
+        occupiedCoordinates.clear();
         ships.length = 0
         for (let i = 0; i < grid.length; i++) {
             grid[i].fill(null);
@@ -157,7 +178,8 @@ function Gameboard (sze = 10)
     
     const getAllShipsSunken = () => ships.every(ship => ship.sunken);
 
-    return {grid, ships, placeShip, receiveAttack, clearGrid, generateRandom, placeRandomShip, occupiedCoordinates, get AllShipsSunken() {
+    return {grid, ships, placeShip, receiveAttack, clearGrid, generateRandom, placeRandomShip, receiveAttackWrapper,
+        occupiedCoordinates, get AllShipsSunken() {
         return getAllShipsSunken();
     }};
 };

@@ -17,23 +17,31 @@ class GameRound {
 
     attackPosition(x, y) {
         if (this.currentPlayer == this.player) {
-            let status = this.currentPlayer.attackEnemy(this.npc.gameboard, x, y);
-            if (status === 'hit') {
-                return 'hit';
+            let {status, shipCoordinates, user} = this.currentPlayer.attackEnemy(this.npc.gameboard, x, y);
+            console.log('you struck');
+            if (status === 'hit' || status === 'sink') {
+                return {status, shipCoordinates, user}
+            }
+            else if (status === 'allShipsSunken') {
+                return {status, shipCoordinates, user, victoryMessage: `${user} has won! they have sunk all their enemy ships!`};
             }
             else {
                 this.switchTurns();
-                return 'miss';
+                return {status, shipCoordinates, user};
             }
         }
         else {
-            let status = this.currentPlayer.attackEnemy(this.player.gameboard, x, y);
-            if (status === 'hit') {
-                return 'hit';
+            console.log('npc struck');
+            let {status, shipCoordinates, user} = this.currentPlayer.attackEnemy(this.player.gameboard, x, y);
+            if (status === 'hit' || status === 'sink') {
+                return {status, shipCoordinates, user}
+            }
+            else if (status === 'allShipsSunken') {
+                return {status, shipCoordinates, user, victoryMessage: `${user} has won! they have sunk all their enemy ships!`};
             }
             else {
                 this.switchTurns();
-                return 'miss';
+                return {status, shipCoordinates, user};
             }
         }
     }

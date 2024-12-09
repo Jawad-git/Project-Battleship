@@ -10,6 +10,7 @@ let domHandler = (() =>
     let leaveButton = document.getElementById('leaveGame');
     let errorMessage = document.getElementById('errorMessage');
     let currentTurn = document.getElementById('currentTurn');
+    let finalScore = document.getElementById('finalScore');
 
     let cellsEnemy;
 
@@ -40,7 +41,7 @@ let domHandler = (() =>
         returnCurrentTurn = callback;
     }
 
-    let stylizeCell = (cell, status) =>
+    let stylizeCell = (cell, status, shipCoordinates) =>
     {
         cell.classList.remove('unoccupied');
         cell.classList.add('occupied');
@@ -52,6 +53,14 @@ let domHandler = (() =>
         {
             cell.classList.add('hit');
         }
+        else if (status === 'sink' || status === 'allShipsSunken')
+        {
+            let parent = cell.parentElement;
+            shipCoordinates.forEach(coord => {
+                let xy = coord.split(' ');
+                parent.querySelector(`.cell[data-x="${xy[0]}"][data-y="${xy[1]}"]`).classList.add('sink');
+            })
+        }
     }
 
 
@@ -60,7 +69,7 @@ let domHandler = (() =>
     {
         let cells = document.querySelectorAll('.cell');
         cells.forEach(cell => {
-            cell.classList.remove('occupied', 'miss', 'hit', 'ship');
+            cell.classList.remove('ship','occupied', 'miss', 'hit', 'sink');
             cell.classList.add('unoccupied');
         });
     }
@@ -86,21 +95,33 @@ let domHandler = (() =>
     }
 
     let handleCellClick = (e) => {
-        let status = onClickHandler(e.target.dataset.x, e.target.dataset.y);
-        stylizeCell(e.target, status);
+        let {status, shipCoordinates, user, victoryMessage} = onClickHandler(e.target.dataset.x, e.target.dataset.y);
         e.target.removeEventListener('click', handleCellClick);
+        stylizeCell(e.target, status, shipCoordinates);
         e.target.classList.remove('clickable');
-        console.log('hi');
+        if (status === 'allShipsSunken')
+        {
+            cellsEnemy.forEach(cell => cell.removeEventListener('click', handleCellClick));
+            finalScore.innerHTML = `Message = ${victoryMessage}`;
+            finalScore.classList.remove('invisible');
+            return;
+        }
         if (status === 'miss') {
             cellsEnemy.forEach(cell => cell.removeEventListener('click', handleCellClick));
-            //switch turn indicator!
             currentTurn.innerHTML = `It is ${returnCurrentTurn()}'s turn`;
             while (true) {
-                let cell = document.querySelector(`.friend .cell[data-x="${Math.floor(Math.random() * 9)}"][data-y="${Math.floor(Math.random() * 9)}"]`);
+                let cell = document.querySelector(`.friend .cell[data-x="${Math.floor(Math.random() * 10)}"][data-y="${Math.floor(Math.random() * 10)}"]`);
                 if (cell.classList.contains('occupied')) continue;
                 //wait(500);
-                let status = onClickHandler(cell.dataset.x, cell.dataset.y);
-                stylizeCell(cell, status);
+                let {status, shipCoordinates, user, victoryMessage} = onClickHandler(cell.dataset.x, cell.dataset.y);
+                stylizeCell(cell, status, shipCoordinates);
+                if (status === 'allShipsSunken')
+                {
+                        cellsEnemy.forEach(cell => cell.removeEventListener('click', handleCellClick));
+                        finalScore.innerHTML = `message = ${victoryMessage}`;
+                        finalScore.classList.remove('invisible');
+                        return;
+                }
                 if (status === 'miss') {
                     currentTurn.innerHTML = `It is ${returnCurrentTurn()}'s turn`;
                     cellsEnemy = document.querySelectorAll('.enemy .unoccupied');
@@ -206,6 +227,7 @@ let domHandler = (() =>
         leaveButton.classList.add('invisible');
         startButton.classList.remove('invisible');
         errorMessage.innerText = '';
+        finalScore.innerText = '';
     }
 
     // function too add all the event listeners

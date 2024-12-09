@@ -25,3 +25,14 @@ test('The function "hits()" works & registers: ', () =>
     ship.hit();
     expect(ship.hits).toEqual(2);
 });
+
+test('The ship sinks when hits == length: ', () =>
+{
+        let ship = new Ship(5);
+        ship.hit();
+        ship.hit();
+        ship.hit();
+        ship.hit();
+        ship.hit();
+        expect(ship.sunken).toEqual(true);
+});

@@ -87,15 +87,14 @@ describe('Gameboard and Ship Tests', () => {
 
     test('receiveAttack() on coordinates with no ship produces a "miss": ', () =>
     {
-        gameboard.receiveAttack(2, 3);
-        expect(gameboard.grid[2][3]).toBe('miss');
+        expect(gameboard.receiveAttack(2, 3)).toBe('miss');
     });
 
     test('receiveAttack() on coordinates with a ship produces a "hit": ', () =>
     {
         gameboard.placeShip(new Ship(2), 2, 3);
-        gameboard.receiveAttack(2, 3);
-        expect(gameboard.grid[2][3]).toBe('hit');
+        //gameboard.receiveAttack(2, 3);
+        expect(gameboard.receiveAttack(2, 3)).toBe('hit');
     });
 
     test('receiveAttack() on already targeted coordinates throws an error: ', () =>
