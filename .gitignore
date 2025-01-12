@@ -4,3 +4,6 @@ node_modules
 
 # Ignore build output directory
 dist
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
